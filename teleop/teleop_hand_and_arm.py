@@ -337,9 +337,9 @@ if __name__ == '__main__':
                         left_hand_action = [dual_gripper_action_array[0]]
                         right_hand_action = [dual_gripper_action_array[1]]
                         current_body_state = arm_ctrl.get_current_motor_q().tolist()
-                        current_body_action = [-tele_data.tele_state.left_thumbstick_value[1]  * 0.3,
-                                               -tele_data.tele_state.left_thumbstick_value[0]  * 0.3,
-                                               -tele_data.tele_state.right_thumbstick_value[0] * 0.3]
+                        current_body_action = [-tele_data.left_ctrl_thumbstickValue[1]  * 0.3,
+                                               -tele_data.left_ctrl_thumbstickValue[0]  * 0.3,
+                                               -tele_data.right_ctrl_thumbstickValue[0] * 0.3]
                 elif (args.ee == "inspire_dfx" or args.ee == "inspire_ftp" or args.ee == "brainco") and args.xr_mode == "hand":
                     with dual_hand_data_lock:
                         left_ee_state = dual_hand_state_array[:6]
