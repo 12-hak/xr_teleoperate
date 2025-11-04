@@ -230,7 +230,6 @@ if __name__ == '__main__':
             time.sleep(0.033)
             if camera_config['head_camera']['enable_zmq'] and xr_need_local_img:
                 head_img, _ = img_client.get_head_frame()
-                print(f"head_img: {type(head_img)}, {head_img.shape if head_img is not None else None}")
                 tv_wrapper.render_to_xr(head_img)
 
         logger_mp.info("---------------------🚀start program🚀-------------------------")
