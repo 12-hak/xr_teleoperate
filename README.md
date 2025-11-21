@@ -233,7 +233,13 @@ build  cert.pem  key.pem  LICENSE  pyproject.toml  README.md  rootCA.key  rootCA
 |  `--record`  | **Enable data recording mode** Press **r** to start teleoperation, then **s** to start recording; press **s** again to stop and save the episode. Press **s** repeatedly to repeat the process. |
 |  `--task-*`  | Configure the save path, target, description, and steps of the recorded task. |
 
+## 1.4 🔄 State Transition Diagram
 
+<p align="center">
+  <a href="https://oss-global-cdn.unitree.com/static/712c312b0ac3401f8d7d9001b1e14645_11655x4305.jpg">
+    <img src="https://oss-global-cdn.unitree.com/static/712c312b0ac3401f8d7d9001b1e14645_11655x4305.jpg" alt="System Diagram" style="width: 85%;">
+  </a>
+</p>
 
 # 2. 💻 Simulation Deployment
 
@@ -436,20 +442,13 @@ If two hands open and close continuously, it indicates success. Once successful,
 
 ## 3.3 ✋ BrainCo Hand Service (Optional)
 
-Please refer to the [official documentation](https://support.unitree.com/home/en/G1_developer/brainco_hand) for setup instructions.
+Please refer to the [Repo README](https://github.com/unitreerobotics/brainco_hand_service) for setup instructions.
 
-After installation, you need to manually start the services for both dexterous hands. Example commands are shown below (note: the serial port names may vary depending on your system):
+## 3.4 ✋ Unitree Dex1_1 Service (Optional)
 
-```bash
-# Terminal 1.
-sudo ./brainco_hand --id 126 --serial /dev/ttyUSB1
-# Terminal 2.
-sudo ./brainco_hand --id 127 --serial /dev/ttyUSB2
-```
+Please refer to the [Repo README](https://github.com/unitreerobotics/dex1_1_service) for setup instructions.
 
-
-
-## 3.4 🚀 Launch
+## 3.5 🚀 Launch
 
 >  ![Warning](https://img.shields.io/badge/Warning-Important-red)
 >
@@ -465,7 +464,7 @@ sudo ./brainco_hand --id 127 --serial /dev/ttyUSB2
 
 Same as simulation but follow the safety warnings above.
 
-## 3.5 🔚 Exit
+## 3.6 🔚 Exit
 
 > ![Warning](https://img.shields.io/badge/Warning-Important-red)
 >

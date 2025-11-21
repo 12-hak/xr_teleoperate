@@ -247,6 +247,13 @@ build  cert.pem  key.pem  LICENSE  pyproject.toml  README.md  rootCA.key  rootCA
 |  `--task-*`  | 此类参数可配置录制的文件保存路径，任务目标、描述、步骤等信息 |
 
 
+## 1.4 🔄 状态转移图
+
+<p align="center">
+  <a href="https://oss-global-cdn.unitree.com/static/09859bdfb48f4b70b51764710381cb49_10805x4235.jpg">
+    <img src="https://oss-global-cdn.unitree.com/static/09859bdfb48f4b70b51764710381cb49_10805x4235.jpg" alt="System Diagram" style="width: 85%;">
+  </a>
+</p>
 
 ------
 
@@ -464,20 +471,16 @@ unitree@PC2:~/DFX_inspire_service/build$ ./hand_example
 
 如果两只手连续打开和关闭，则表示成功。一旦成功，即可关闭终端 2 中的 `./hand_example` 程序。
 
-## 3.3 ✋BrainCo 手部服务（可选）
+## 3.3 ✋ BrainCo 手部服务（可选）
 
-请参考[官方文档](https://support.unitree.com/home/zh/G1_developer/brainco_hand)。安装完毕后，请手动启动两个灵巧手的服务，命令示例如下（串口名称可能与实际有所差别）：
+请参考[仓库文档](https://github.com/unitreerobotics/brainco_hand_service)。
 
-```bash
-# Terminal 1.
-sudo ./brainco_hand --id 126 --serial /dev/ttyUSB1
-# Terminal 2.
-sudo ./brainco_hand --id 127 --serial /dev/ttyUSB2
-```
+## 3.4 ✋ Unitree Dex1_1 服务（可选）
+
+请参考[仓库文档](https://github.com/unitreerobotics/dex1_1_service)。
 
 
-
-## 3.4 🚀 启动遥操
+## 3.5 🚀 启动遥操
 
 >  ![Warning](https://img.shields.io/badge/Warning-Important-red)
 >
@@ -492,7 +495,7 @@ sudo ./brainco_hand --id 127 --serial /dev/ttyUSB2
 
 与仿真部署基本一致，但要注意上述警告事项。
 
-## 3.5 🔚 退出
+## 3.6 🔚 退出
 
 >  ![Warning](https://img.shields.io/badge/Warning-Important-red)
 >
