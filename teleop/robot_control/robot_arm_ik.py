@@ -34,7 +34,7 @@ class G1_29_ArmIK:
 
         # Try loading cache first
         if os.path.exists(self.cache_path) and (not self.Visualization):
-            logger_mp.info(f"[G1_29_ArmIK] >>> Loading cached robot model: {self.cache_path}")
+            # logger_mp.info(f"[G1_29_ArmIK] >>> Loading cached robot model: {self.cache_path}")
             self.robot, self.reduced_robot = self.load_cache()
         else:
             logger_mp.info("[G1_29_ArmIK] >>> Loading URDF (slow)...")

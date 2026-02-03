@@ -33,7 +33,7 @@ kTopicDex3RightState = "rt/dex3/right/state"
 
 class Dex3_1_Controller:
     def __init__(self, left_hand_array_in, right_hand_array_in, dual_hand_data_lock = None, dual_hand_state_array_out = None,
-                       dual_hand_action_array_out = None, fps = 100.0, Unit_Test = False, simulation_mode = False):
+                       dual_hand_action_array_out = None, fps = 100.0, Unit_Test = False, simulation_mode = False, network_interface = None):
         """
         [note] A *_array type parameter requires using a multiprocessing Array, because it needs to be passed to the internal child process
 
@@ -58,6 +58,7 @@ class Dex3_1_Controller:
         self.fps = fps
         self.Unit_Test = Unit_Test
         self.simulation_mode = simulation_mode
+        self.network_interface = network_interface
         if not self.Unit_Test:
             self.hand_retargeting = HandRetargeting(HandType.UNITREE_DEX3)
         else:
@@ -90,10 +91,10 @@ class Dex3_1_Controller:
             logger_mp.warning("[Dex3_1_Controller] Waiting to subscribe dds...")
         logger_mp.info("[Dex3_1_Controller] Subscribe dds ok.")
 
-        hand_control_process = Process(target=self.control_process, args=(left_hand_array_in, right_hand_array_in,  self.left_hand_state_array, self.right_hand_state_array,
+        hand_control_thread = threading.Thread(target=self.control_process, args=(left_hand_array_in, right_hand_array_in,  self.left_hand_state_array, self.right_hand_state_array,
                                                                           dual_hand_data_lock, dual_hand_state_array_out, dual_hand_action_array_out))
-        hand_control_process.daemon = True
-        hand_control_process.start()
+        hand_control_thread.daemon = True
+        hand_control_thread.start()
 
         logger_mp.info("Initialize Dex3_1_Controller OK!")
 
@@ -136,6 +137,8 @@ class Dex3_1_Controller:
     
     def control_process(self, left_hand_array_in, right_hand_array_in, left_hand_state_array, right_hand_state_array,
                               dual_hand_data_lock = None, dual_hand_state_array_out = None, dual_hand_action_array_out = None):
+        # Already initialized in main process
+            
         self.running = True
 
         left_q_target  = np.full(Dex3_Num_Motors, 0)
@@ -198,6 +201,12 @@ class Dex3_1_Controller:
                         dual_hand_action_array_out[:] = action_data
 
                 self.ctrl_dual_hand(left_q_target, right_q_target)
+                
+                if not hasattr(self, "_publish_count"):
+                    self._publish_count = 0
+                self._publish_count += 1
+                if self._publish_count % 300 == 0:
+                    logger_mp.info(f"[Dex3_1_Controller] Published {self._publish_count} commands")
                 current_time = time.time()
                 time_elapsed = current_time - start_time
                 sleep_time = max(0, (1 / self.fps) - time_elapsed)

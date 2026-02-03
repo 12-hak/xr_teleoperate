@@ -20,12 +20,13 @@ kTopicbraincoRightState = "rt/brainco/right/state"
 
 class Brainco_Controller:
     def __init__(self, left_hand_array, right_hand_array, dual_hand_data_lock = None, dual_hand_state_array = None,
-                       dual_hand_action_array = None, fps = 100.0, Unit_Test = False, simulation_mode = False):
+                       dual_hand_action_array = None, fps = 100.0, Unit_Test = False, simulation_mode = False, network_interface = None):
         logger_mp.info("Initialize Brainco_Controller...")
         self.fps = fps
         self.hand_sub_ready = False
         self.Unit_Test = Unit_Test
         self.simulation_mode = simulation_mode
+        self.network_interface = network_interface
 
         if not self.Unit_Test:
             self.hand_retargeting = HandRetargeting(HandType.BRAINCO_HAND)
@@ -58,10 +59,10 @@ class Brainco_Controller:
             logger_mp.warning("[brainco_Controller] Waiting to subscribe dds...")
         logger_mp.info("[brainco_Controller] Subscribe dds ok.")
 
-        hand_control_process = Process(target=self.control_process, args=(left_hand_array, right_hand_array,  self.left_hand_state_array, self.right_hand_state_array,
+        hand_control_thread = threading.Thread(target=self.control_process, args=(left_hand_array, right_hand_array,  self.left_hand_state_array, self.right_hand_state_array,
                                                                           dual_hand_data_lock, dual_hand_state_array, dual_hand_action_array))
-        hand_control_process.daemon = True
-        hand_control_process.start()
+        hand_control_thread.daemon = True
+        hand_control_thread.start()
 
         logger_mp.info("Initialize brainco_Controller OK!")
 
@@ -94,6 +95,8 @@ class Brainco_Controller:
     
     def control_process(self, left_hand_array, right_hand_array, left_hand_state_array, right_hand_state_array,
                               dual_hand_data_lock = None, dual_hand_state_array = None, dual_hand_action_array = None):
+        # Already initialized in main process
+            
         self.running = True
 
         left_q_target  = np.full(brainco_Num_Motors, 0)
@@ -157,8 +160,14 @@ class Brainco_Controller:
                     with dual_hand_data_lock:
                         dual_hand_state_array[:] = state_data
                         dual_hand_action_array[:] = action_data
-                # logger_mp.info(f"left_q_target:{left_q_target}")
+                
                 self.ctrl_dual_hand(left_q_target, right_q_target)
+                
+                if not hasattr(self, "_publish_count"):
+                    self._publish_count = 0
+                self._publish_count += 1
+                if self._publish_count % 300 == 0:
+                    logger_mp.info(f"[brainco_Controller] Published {self._publish_count} commands")
                 current_time = time.time()
                 time_elapsed = current_time - start_time
                 sleep_time = max(0, (1 / self.fps) - time_elapsed)
